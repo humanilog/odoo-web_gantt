@@ -1,0 +1,12 @@
+# -*- encoding: utf-8 -*-
+{
+  'name': 'Web Gantt (Community)',
+  'description': 'OpenERP Web Gantt chart view (Community)',
+  'version': '0.1dev',
+  'category': 'Hidden',
+  'author': 'Stefan Becker',
+  'depends': ['web'],
+  'data': []
+  'qweb': [],
+  'auto_install': True
+}
