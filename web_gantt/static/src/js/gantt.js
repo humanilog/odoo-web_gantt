@@ -22,7 +22,6 @@ var GanttView = View.extend({
   init: function(parent, dataset, view_id, options) {
     this._super(parent, dataset, view_id, options);
 
-    this.ready = $.Deferred();
     this.shown = $.Deferred();
     this.model = dataset.model;
     this.fields_view = {};
@@ -52,21 +51,66 @@ var GanttView = View.extend({
     this.date_stop = attrs.date_stop;
     this.progress = attrs.progress;
 
-    this.ready.resolve();
+    this.shown.done(this.shown_done.bind(this));
+  },
+
+  //called when view is shown
+  shown_done: function() {
+    console.log('shown_done()');
   },
 
   do_show: function() {
     var self = this;
     this.shown.resolve();
-  }
+    return this._super();
+  },
 
-  load_gantt: function(fields_view) {
+  do_search: function(domain, context, group_by) {
+    var self = this;
+    this.shown.done(function () {
+      self._do_search(domain, context, group_by);
+    });
+  },
+
+  //do reading and rendering here
+  _do_search: function(offset, domain, context) {
     var self = this;
 
     //get all fields in in <gantt/>
     var fields = _.compact(_.map(["date_start", "date_delay", "date_stop", "progress"], function(key) {
       return self.fields_view.arch.attrs[key] || '';
     }));
+    fields.push('name');
+
+    self.dataset.read_slice(fields, {
+      offset: offset,
+      domain: domain,
+      context: context
+    }).done(function(data) {
+      var source = _.map(data, function(object) {
+        var date_start = object[self.date_start];
+        var date_stop = object[self.date_stop] || date_start;
+
+        return {
+          name: ' ',
+          desc: object.name,
+          values: [{
+            to: '/Date(' + Date.parse(date_start) + ')/',
+            from: '/Date(' + Date.parse(date_stop) + ')/',
+            label: object.name
+          }]
+        };
+      });
+      console.log(source);
+      console.log(data);
+      $('.o_gantt_widget').gantt({
+        source: source,
+        scale: "months",
+        navigate: "scroll",
+        minScale: "weeks",
+        maxScale: "months"
+      });
+    })
   }
 });
 
