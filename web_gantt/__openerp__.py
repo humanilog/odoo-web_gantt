@@ -6,7 +6,11 @@
   'category': 'Hidden',
   'author': 'Stefan Becker',
   'depends': ['web'],
-  'data': []
-  'qweb': [],
+  'data': [
+    'views/web_gantt.xml'
+  ],
+  'qweb': [
+    'static/src/xml/*.xml'
+  ],
   'auto_install': True
 }
