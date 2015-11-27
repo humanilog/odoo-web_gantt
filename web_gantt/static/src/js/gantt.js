@@ -95,8 +95,8 @@ var GanttView = View.extend({
           name: ' ',
           desc: object.name,
           values: [{
-            to: '/Date(' + Date.parse(date_start) + ')/',
-            from: '/Date(' + Date.parse(date_stop) + ')/',
+            from: '/Date(' + Date.parse(date_start) + ')/',
+            to: '/Date(' + Date.parse(date_stop) + ')/',
             label: object.name
           }]
         };
