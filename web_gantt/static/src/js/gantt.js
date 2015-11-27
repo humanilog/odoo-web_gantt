@@ -105,7 +105,7 @@ var GanttView = View.extend({
       console.log(data);
       $('.o_gantt_widget').gantt({
         source: source,
-        scale: "months",
+        scale: "days",
         navigate: "scroll",
         minScale: "weeks",
         maxScale: "months"

@@ -69,7 +69,6 @@
 .fn-gantt .leftPanel .name, .fn-gantt .leftPanel .desc {
     float: left;
     height: 23px;
-    margin: 0;
     border-bottom: 1px solid #DDD;
     background-color: #f6f6f6;
 }
@@ -429,3 +428,14 @@
     clear: both;
 }
 
+/* bootstrap fixes */
+.fn-gantt .leftPanel *,
+.fn-gantt .leftPanel *:after,
+.fn-gantt .leftPanel *:before,
+.fn-gantt .rightPanel *,
+.fn-gantt .rightPanel *:after,
+.fn-gantt .rightPanel *:before {
+  -webkit-box-sizing: content-box !important;
+  -moz-box-sizing: content-box !important;
+  box-sizing: content-box !important;
+}
