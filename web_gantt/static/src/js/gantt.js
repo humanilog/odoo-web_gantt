@@ -120,7 +120,8 @@ var GanttView = View.extend({
       scale: "days",
       navigate: "scroll",
       minScale: "days",
-      maxScale: "months"
+      maxScale: "months",
+      itemsPerPage: 100
     });
 
     this.data = false;//reset
@@ -129,27 +130,56 @@ var GanttView = View.extend({
   transform_data: function(names) {
     var self = this;
 
-    return _.map(this.data, function(object) {
+    var rows = _.map(this.data, function(object) {
       var date_start = object[self.date_start];
       var date_stop = object[self.date_stop] || date_start;
-      var name = _.find(names, function(tuple) { return tuple[0] == object.id; })[1];
+      var desc = _.find(names, function(tuple) { return tuple[0] == object.id; })[1];
 
-      var desc = object[self.default_group_by] || ' ';
-      if (Object.prototype.toString.call(desc) == '[object Array]') {
+      var name = object[self.default_group_by] || ' ';
+      if (Object.prototype.toString.call(name) == '[object Array]') {
         //Many2one
-        desc = desc[1];
+        name = name[1];
       }
 
       return {
-        name: desc,
-        desc: name,
+        name: name,
+        desc: desc,
         values: [{
-          from: '/Date(' + Date.parse(date_start) + ')/',
-          to: '/Date(' + Date.parse(date_stop) + ')/',
-          label: name
+          from: Date.parse(date_start),
+          to: Date.parse(date_stop)
         }]
       };
     });
+
+    var grouped = _.groupBy(rows, 'name');
+    var final = [];
+
+    _.each(grouped, function(group, group_name) {
+      var date_start = _.min(group, function(element) {
+        return element.values[0].from;
+      }).values[0].from;
+      var date_end = _.max(group, function(element) {
+        return element.values[0].to;
+      }).values[0].to;
+
+      final.push({
+        name: group_name,
+        values: [{
+          from: date_start,
+          to: date_end,
+          customClass: 'ganttOrange'
+        }]
+      });
+
+      group = _.map(group, function(element) {
+        element.name = ' ';
+        return element;
+      });
+
+      Array.prototype.push.apply(final, group);
+    });
+
+    return final;
   }
 });
 
