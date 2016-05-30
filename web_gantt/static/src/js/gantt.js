@@ -18,6 +18,8 @@ var QWeb = core.qweb;
 var GanttView = View.extend({
   template: 'GanttView',
   display_name: _lt('Gantt'),
+  icon: 'fa-tasks',
+  view_type: 'gantt',
 
   init: function(parent, dataset, view_id, options) {
     this._super(parent, dataset, view_id, options);
